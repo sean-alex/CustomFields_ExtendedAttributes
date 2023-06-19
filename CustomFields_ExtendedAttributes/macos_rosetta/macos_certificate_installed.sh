@@ -1,16 +1,16 @@
-#!/bin/bash
+#!/bin/sh
 
-# reference: https://community.jamf.com/t5/jamf-pro/verify-the-existence-of-a-system-keychain-certificate/td-p/190019
+# REFERENCE: https://mostlymac.blog/2022/01/13/detecting-if-rosetta-2-is-installed-on-an-apple-silicon-mac/
 
-CERTNAME=""
-
-## Default result. Gets changed to "Yes" if the Root CA is found
-result="NotInstalled"
-
-while read cert_entry; do
-    if [ "$cert_entry" == "$CERTNAME" ]; then
-        		result="Installed"
+# If cpu is Apple branded, use arch binary to check if x86_64 code can run
+if [[ "$(sysctl -n machdep.cpu.brand_string)" == *'Apple'* ]]; then
+    if arch -x86_64 /usr/bin/true 2> /dev/null; then
+        result="Installed"
+    else
+        result="Missing"
     fi
-done < <(security find-certificate -a /Library/Keychains/System.keychain | awk -F'"' '/alis/{print $4}')
+else
+    result="Ineligible"
+fi
 
 echo "$result"
