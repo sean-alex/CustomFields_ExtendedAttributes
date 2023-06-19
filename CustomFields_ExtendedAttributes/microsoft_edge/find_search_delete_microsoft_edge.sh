@@ -90,8 +90,8 @@ printed-line
 		else
 			writelog "found app in non-standard path..."
 			writelog "path is $file, do deleting non-standard installation..."
-			# writelog "pretending to delete..."
-			rm -rf "$file"
+			writelog "pretending to delete..."
+			# rm -rf "$file"
 	fi
 
 done
